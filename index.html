@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Reservation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(143, 225, 225);
+        }
+
+        #reservation-form {
+            width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #2280f4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"], input[type="number"], input[type="datetime-local"] {
+            width: 100%;
+            height: 30px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #03f5f9;
+        }
+
+        button {
+            width: 100%;
+            height: 40px;
+
+            background-color: #0d2c8a;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #reservation-list {
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        .reservation {
+            background-color: #6469ca;
+            color: white;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .reservation:last-child {
+            border-bottom: none;
+        }
+
+        .delete-button {
+            background-color: #0d138b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Restaurant Reservation System</h1>
+
+    <form id="reservation-form">
+        <label for="customer-name">Customer Name:</label>
+        <input type="text" id="customer-name" required><br><br>
+        <label for="number-of-guests">Number of Guests:</label>
+        <input type="number" id="number-of-guests" required><br><br>
+        <label for="reservation-time">Reservation Time:</label>
+        <input type="datetime-local" id="reservation-time" required><br><br>
+        <button id="submit-button">Make Reservation</button>
+    </form>
+
+    <div id="reservation-list"></div>
+
+    <script>
+        let reservations = [];
+
+        document.getElementById('submit-button').addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const customerName = document.getElementById('customer-name').value;
+            const numberOfGuests = document.getElementById('number-of-guests').value;
+            const reservationTime = document.getElementById('reservation-time').value;
+
+            if (customerName && numberOfGuests && reservationTime) {
+                const reservation = {
+                    customerName,
+                    numberOfGuests,
+                    reservationTime
+                };
+
+                reservations.push(reservation);
+
+                displayReservations();
+
+                // Clear input fields after submission
+                document.getElementById('customer-name').value = '';
+                document.getElementById('number-of-guests').value = '';
+                document.getElementById('reservation-time').value = '';
+            } else {
+                alert("Please fill in all fields");
+            }
+        });
+
+        function displayReservations() {
+            const reservationList = document.getElementById('reservation-list');
+            reservationList.innerHTML = '';
+
+            reservations.forEach((reservation, index) => {
+                const reservationHTML = `
+                    <div class="reservation">
+                        <h2>${reservation.customerName}</h2>
+                        <p>Number of Guests: ${reservation.numberOfGuests}</p>
+                        <p>Reservation Time: ${reservation.reservationTime}</p>
+                        <button class="delete-button" onclick="deleteReservation(${index})">Delete</button>
+                    </div>
+                `;
+                reservationList.insertAdjacentHTML('beforeend', reservationHTML);
+            });
+        }
+
+        function deleteReservation(index) {
+            reservations.splice(index, 1);
+            displayReservations();
+        }
+    </script>
+</body>
+</html>
